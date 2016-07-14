@@ -115,7 +115,7 @@ def send_confirmation(action, token, email):
 
 @app.route('/')
 def index():
-    return redirect("http://github.com/progrium/keychain.io")
+    return redirect("https://github.com/progrium/keychain.io")
 
 
 @app.route('/<email>/confirm/<token>')
