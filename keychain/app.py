@@ -94,17 +94,18 @@ def schedule_action_expiration(token):
         token, None))
 
 
+mailgun_domain = os.environ.get('MAILGUN_DOMAIN')
+mailgun_key = os.environ.get('MAILGUN_API_KEY')
 def send_confirmation(action, token, email):
-    if 'SENDGRID_USERNAME' in os.environ:
+    request_url = 'https://api.mailgun.net/v3/{0}/messages'.format(mailgun_domain)
+    if 'MAILGUN_API_KEY' in os.environ:
         requests.post(
-            "https://sendgrid.com/api/mail.send.json",
+            request_url, 
+            auth=('api', mailgun_key), 
             data={
-                'api_user': os.environ.get('SENDGRID_USERNAME'),
-                'api_key': os.environ.get('SENDGRID_PASSWORD'),
-                'to': email,
-                'subject': "Keychain.io {} Confirmation".format(
-                    action.capitalize()),
                 'from': "robot@keychain.io",
+                'to': email,
+                'subject': "Keychain.io {} Confirmation".format(action.capitalize()),
                 'text': "Click this link to confirm {}:\n{}{}/confirm/{}"
                 .format(action, request.url_root, email, token)
             })
